@@ -9,7 +9,7 @@
 ## Course Information:
 - **Course:** CMSC 608 - Advanced Database Systems  
 - **Semester:** Spring 2025  
-- **Instructor:** [Instructor Name]  
+- **Instructor:** Thomas Gyeera  
 - **Last Updated:** February 2025  
 
 ## Overview:
