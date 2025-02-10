@@ -1,0 +1,275 @@
+---
+title: "HW2 - Entity Relationship Diagrams"
+author: 
+  - Tejesh Annavarapu
+  - Srujan Katukam
+  - Anumandla Muralidhar Reddy
+  - Ajaykumar Reddy Rachala
+format: html
+toc: true
+toc-depth: 3
+number-sections: true
+---
+
+# **CMSC 608 - Advanced Database Systems**
+### **Instructor:** Thomas Gyeera
+
+## **GitHub Repository**
+👉 **[AdvancedDatabaseHW2 Repository](https://github.com/Tejesh18/AdvancedDatabaseHW2)** 
+
+# Introduction  
+
+Entity-Relation (ER) diagrams are an essential tool for database design, helping transform real-world data relationships into structured schemas. In this assignment, we explore **three ER models** by designing **Chen Notation (Graphviz)** and **Crow’s Foot Notation (Mermaid)** diagrams for selected database systems.
+
+The selected systems for this assignment are:
+1. **Library Management System**
+2. **Restaurant Reservation System**
+3. **Real Estate Listing System**
+
+Each section includes:
+- **Chen ER Diagram** (Graphviz)
+- **Crow’s Foot ER Diagram** (Mermaid)
+- **Discussion on design choices**
+- **Relation set schemas**
+
+---
+
+# 1. Library Management System  
+
+## **Problem Description**  
+A library system manages books, members, and loans. The system tracks:
+- **Books** (Book ID, Title, Author)
+- **Members** (Member ID, Name, Membership Date)
+- **Loans** (Loan ID, Loan Date, Return Date)
+
+Each member can borrow multiple books over time, and each loan is tied to a single book and a single member.
+
+## **Chen ER Diagram (Graphviz)**  
+
+```{dot}
+digraph Library {
+    node [shape=ellipse];
+    
+    Book [shape=box];
+    Member [shape=box];
+    Loan [shape=diamond];
+
+    Book -> Loan [label="Borrowed by"];
+    Member -> Loan [label="Borrows"];
+    
+    BookID [shape=ellipse]; Title [shape=ellipse]; Author [shape=ellipse];
+    MemberID [shape=ellipse]; Name [shape=ellipse]; MembershipDate [shape=ellipse];
+    LoanID [shape=ellipse]; LoanDate [shape=ellipse]; ReturnDate [shape=ellipse];
+
+    Book -> BookID;
+    Book -> Title;
+    Book -> Author;
+    
+    Member -> MemberID;
+    Member -> Name;
+    Member -> MembershipDate;
+    
+    Loan -> LoanID;
+    Loan -> LoanDate;
+    Loan -> ReturnDate;
+}
+```
+
+## **Crow’s Foot ER Diagram (Mermaid)**  
+
+```{mermaid}
+erDiagram
+    BOOK {
+        string BookID PK
+        string Title
+        string Author
+    }
+    MEMBER {
+        string MemberID PK
+        string Name
+        date MembershipDate
+    }
+    LOAN {
+        string LoanID PK
+        date LoanDate
+        date ReturnDate
+    }
+    MEMBER ||--o{ LOAN : borrows
+    BOOK ||--o{ LOAN : borrowed_by
+```
+
+## **Design Discussion**  
+- **Weak Entity:** Loans are dependent on both Books and Members.
+- **Many-to-Many Relationship:** Members can borrow multiple books over time.
+- **Attributes:** Membership Date helps track when a member joined.
+
+## **Relation Set Schema**  
+- **Book(BookID, Title, Author)**  
+- **Member(MemberID, Name, MembershipDate)**  
+- **Loan(LoanID, LoanDate, ReturnDate, BookID, MemberID)**  
+
+---
+
+# 2. Restaurant Reservation System  
+
+## **Problem Description**  
+A restaurant manages reservations, customers, and tables. The system tracks:
+- **Reservations** (Reservation ID, Date, Time)
+- **Customers** (Customer ID, Name, Contact)
+- **Tables** (Table Number, Seating Capacity, Location)
+
+Each reservation is made by a single customer for one table, but tables can have multiple reservations over time.
+
+## **Chen ER Diagram (Graphviz)**  
+
+```{dot}
+digraph Restaurant {
+    node [shape=ellipse];
+
+    Customer [shape=box];
+    Reservation [shape=diamond];
+    Table [shape=box];
+
+    Customer -> Reservation [label="Makes"];
+    Table -> Reservation [label="Reserved for"];
+    
+    CustomerID [shape=ellipse]; Name [shape=ellipse]; Contact [shape=ellipse];
+    ReservationID [shape=ellipse]; Date [shape=ellipse]; Time [shape=ellipse];
+    TableNumber [shape=ellipse]; SeatingCapacity [shape=ellipse]; Location [shape=ellipse];
+
+    Customer -> CustomerID;
+    Customer -> Name;
+    Customer -> Contact;
+    
+    Reservation -> ReservationID;
+    Reservation -> Date;
+    Reservation -> Time;
+    
+    Table -> TableNumber;
+    Table -> SeatingCapacity;
+    Table -> Location;
+}
+```
+
+## **Crow’s Foot ER Diagram (Mermaid)**  
+
+```{mermaid}
+erDiagram
+    CUSTOMER {
+        string CustomerID PK
+        string Name
+        string Contact
+    }
+    TABLE {
+        int TableNumber PK
+        int SeatingCapacity
+        string Location
+    }
+    RESERVATION {
+        string ReservationID PK
+        date Date
+        time Time
+    }
+    CUSTOMER ||--o{ RESERVATION : makes
+    TABLE ||--o{ RESERVATION : reserved_for
+```
+
+## **Design Discussion**  
+- **Many-to-Many Relationship:** A table can be reserved multiple times by different customers.
+- **Single Reservation Constraint:** Each reservation is only for one customer.
+
+## **Relation Set Schema**  
+- **Customer(CustomerID, Name, Contact)**  
+- **Table(TableNumber, SeatingCapacity, Location)**  
+- **Reservation(ReservationID, Date, Time, CustomerID, TableNumber)**  
+
+---
+
+# 3. Real Estate Listing System  
+
+## **Problem Description**  
+A real estate agency tracks:
+- **Properties** (Property ID, Address, Listing Price)
+- **Agents** (Agent ID, Name, Contact)
+- **Clients** (Client ID, Name, Budget)
+
+Each agent manages multiple properties, and each property can have multiple interested clients.
+
+## **Chen ER Diagram (Graphviz)**  
+
+```{dot}
+digraph RealEstate {
+    node [shape=ellipse];
+
+    Property [shape=box];
+    Agent [shape=box];
+    Client [shape=box];
+    Interest [shape=diamond];
+
+    Agent -> Property [label="Manages"];
+    Client -> Interest [label="Interested in"];
+    Property -> Interest [label="Has"];
+
+    PropertyID [shape=ellipse]; Address [shape=ellipse]; ListingPrice [shape=ellipse];
+    AgentID [shape=ellipse]; Name [shape=ellipse]; Contact [shape=ellipse];
+    ClientID [shape=ellipse]; Name [shape=ellipse]; Budget [shape=ellipse];
+
+    Property -> PropertyID;
+    Property -> Address;
+    Property -> ListingPrice;
+    
+    Agent -> AgentID;
+    Agent -> Name;
+    Agent -> Contact;
+    
+    Client -> ClientID;
+    Client -> Name;
+    Client -> Budget;
+}
+```
+
+## **Crow’s Foot ER Diagram (Mermaid)**  
+
+```{mermaid}
+erDiagram
+    PROPERTY {
+        string PropertyID PK
+        string Address
+        float ListingPrice
+    }
+    AGENT {
+        string AgentID PK
+        string Name
+        string Contact
+    }
+    CLIENT {
+        string ClientID PK
+        string Name
+        float Budget
+    }
+    INTEREST {
+        string InterestID PK
+    }
+    AGENT ||--o{ PROPERTY : manages
+    CLIENT ||--o{ INTEREST : interested_in
+    PROPERTY ||--o{ INTEREST : has
+```
+
+## **Design Discussion**  
+- **Many-to-Many Relationship:** Properties can have multiple interested clients.
+- **Single Agent Per Property:** Each property is managed by one agent.
+
+## **Relation Set Schema**  
+- **Property(PropertyID, Address, ListingPrice, AgentID)**  
+- **Agent(AgentID, Name, Contact)**  
+- **Client(ClientID, Name, Budget)**  
+- **Interest(InterestID, ClientID, PropertyID)**  
+
+---
+
+# Conclusion  
+
+This assignment explored **three ER diagrams** using **Chen and Crow’s Foot notations**, analyzing different database systems with their attributes, relationships, and schema designs.
+
+---
+
