@@ -35,7 +35,7 @@ Each problem includes:
 | File Name       | Description |
 |----------------|------------|
 | `report.qmd`   | **Quarto source file** with ER diagrams, schemas, and explanations. |
-| `report.html`  | **Rendered HTML report** (Submit this on Canvas). |
+| `report.html`  | **Rendered HTML report**. |
 | `README.md`    | **Project documentation and submission details.** |
 
 ## How to Render the Report:
